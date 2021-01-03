@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>商品詳細 | t's MARKET</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+  </head>
+
+  <body class="page-login page-1colum">
+
+    <!-- メニュー -->
+    <header>
+      <div class="site-width">
+        <h1><a href="index.html">t's MARKET</a></h1>
+        <nav id="top-nav">
+          <ul>
+            <li><a href="signup.html" class="btn btn-primary">ユーザー登録</a></li>
+            <li><a href="">ログイン</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <div id="contents" class="site-width">
+      <!-- Main -->
+      <section id="main">
+
+      </section>
+    </div>
+
+    <!-- footer -->
+    <footer id="footer">
+      Copyright <a href="">t's home</a>. ALL Rights Reserved.
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+      $(function(){
+        var $ftr = $('#footer');
+        if(window.innerHeight > $ftr.offset().top + $ftr.outerHeight() ){
+          $ftr.attr({'style': 'position:fixed; top:' + (window.innerHeight - $ftr.outerHeight()) + 'px;'});
+        }
+      });
+    </script>
+  </body>
+</html>
