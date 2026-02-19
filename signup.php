@@ -19,37 +19,37 @@ $err_msg = array();
 $dbRst = false;
 
 //バリデーション関数（未入力チェック）
-function validRequired($str, $err){
+function validRequired($str, &$err){
   if(empty($str)){
     $err = MSG01;
   }
 }
 //バリデーション関数（未入力チェック）
-function validEmail($str, $err){
+function validEmail($str, &$err){
   if(!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $str)){
     $err = MSG02;
   }
 }
 //バリデーション関数（同値チェック）
-function validMatch($str1, $str2, $err){
+function validMatch($str1, $str2, &$err){
   if($str1 !== $str2){
     $err = MSG03;
   }
 }
 //バリデーション関数（最小文字数チェック）
-function validMinLen($str, $min = 6, $err){
+function validMinLen($str, &$err, $min = 6){
   if(mb_strlen($str) < $min){
     $err = MSG05;
   }
 }
 //バリデーション関数（最大文字数チェック）
-function validMaxLen($str, $max = 256, $err){
-  if(mb_strlen($str) < $max){
+function validMaxLen($str, &$err, $max = 256){
+  if(mb_strlen($str) > $max){
     $err = MSG06;
   }
 }
 //バリデーション関数（半角チェック）
-function validHalf($str, $err){
+function validHalf($str, &$err){
   if(!preg_match("/^[a-zA-Z0-9]+$/", $str)){
     $err = MSG04;
 
@@ -112,11 +112,12 @@ if(!empty($_POST)){
         $stmt = $dbh->prepare('INSERT INTO users (email,pass,login_time) VALUES (:email,:pass,:login_time)');
 
         //プレースホルダに値をセットし、SQL文を実行
-        $dbRst = $stmt->execute(array(':email' => $email, ':pass' => $pass, ':login_time' => date('Y-m-d H:i:s')));
+        $dbRst = $stmt->execute(array(':email' => $email, ':pass' => password_hash($pass, PASSWORD_DEFAULT), ':login_time' => date('Y-m-d H:i:s')));
         
         //SQL実行結果が成功の場合
         if($dbRst){
           header("Location:mypage.html"); //マイページへ
+          exit;
         }
       }
 
@@ -158,7 +159,7 @@ if(!empty($_POST)){
 
         <div class="form-container">
 
-          <form action="mypage.html" class="form">
+          <form action="" method="post" class="form">
             <h2 class="title">ユーザー登録</h2>
             <div class="area-msg">
              <?php 
@@ -171,15 +172,15 @@ if(!empty($_POST)){
             </div>
             <label>
               Email
-              <input type="text" name="email">
+              <input type="text" name="email" value="<?php if(!empty($_POST['email'])) echo htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8'); ?>">
             </label>
             <label>
               パスワード <span style="font-size:12px">※英数字６文字以上</span>
-              <input type="text" name="pass">
+              <input type="password" name="pass">
             </label>
             <label>
               パスワード（再入力）
-              <input type="text" name="pass">
+              <input type="password" name="pass_retype">
             </label>
             <div class="btn-container">
               <input type="submit" class="btn btn-mid" value="登録する">
